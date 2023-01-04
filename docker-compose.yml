@@ -1,0 +1,15 @@
+version: "2"
+
+services:
+  agent:
+    build: .
+    privileged: true
+    network_mode: host
+    tmpfs:
+      - /run
+      - /var/run
+    volumes:
+      - data:/var/lib/rancher/k3s
+
+volumes:
+  data: {}
