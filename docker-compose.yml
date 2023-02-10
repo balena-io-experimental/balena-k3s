@@ -2,7 +2,7 @@ version: "2"
 
 services:
   agent:
-    build: .
+    build: agent
     privileged: true
     network_mode: host
     tmpfs:
@@ -10,6 +10,16 @@ services:
       - /var/run
     volumes:
       - data:/var/lib/rancher/k3s
+      - config:/etc/rancher/k3s
+
+  kubectl:
+    build: kubectl
+    network_mode: host
+    environment:
+      KUBECONFIG: /config/k3s.yaml  # TODO: how to get this file when not in server mode?
+    volumes:
+      - config:/config:ro
 
 volumes:
   data: {}
+  config: {}
