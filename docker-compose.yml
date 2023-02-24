@@ -49,6 +49,7 @@ services:
   kubectl:
     build: .
     environment:
+      K3S_URL: "https://server:6443"
       KUBECONFIG: "/config/kubeconfig.yaml"
     volumes:
       - output:/output:ro
