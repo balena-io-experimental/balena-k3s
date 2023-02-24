@@ -7,7 +7,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 # hadolint ignore=DL3008
 RUN apt-get update && apt-get install --no-install-recommends -y \
     ca-certificates \
-    curl && \
+    curl \
+    dnsutils && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -23,16 +24,18 @@ RUN curl -sLS -o get.sh "${ARKADE_URL}" && \
 ENV PATH "${PATH}:/root/.arkade/bin/"
 
 RUN arkade get --progress=false \
-        flux@v0.39.0 \
-        helm@v3.11.1 \
-        jq@jq-1.6 \
-        k3sup@0.12.12 \
-        k9s@v0.27.2 \
-        kubectl@v1.24.2 \
-        yq@v4.30.8
+    flux@v0.39.0 \
+    helm@v3.11.1 \
+    jq@jq-1.6 \
+    k3sup@0.12.12 \
+    k9s@v0.27.2 \
+    kubectl@v1.24.2 \
+    yq@v4.30.8
 
 COPY entry.sh /
 
 RUN chmod +x /entry.sh
+
+COPY kubernetes/ /kubernetes
 
 CMD [ "/entry.sh" ]
