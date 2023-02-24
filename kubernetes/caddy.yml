@@ -1,0 +1,73 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: caddy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: caddy
+  template:
+    metadata:
+      labels:
+        app: caddy
+    spec:
+      containers:
+        - name: caddy
+          image: caddy:latest
+          ports:
+            - containerPort: 80
+              name: http
+            - containerPort: 443
+              name: https
+          volumeMounts:
+            - name: caddyfile
+              mountPath: /etc/caddy
+      volumes:
+        - name: caddyfile
+          configMap:
+            name: caddy
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: caddy
+data:
+  Caddyfile: |
+    :80
+    root * /var/www/html
+    file_server
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: caddy
+spec:
+  selector:
+    app: caddy
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+  - name: https
+    port: 443
+    targetPort: 443
+  type: ClusterIP
+---
+# apiVersion: networking.k8s.io/v1beta1 # for k3s < v1.19
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: caddy
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: caddy
+            port:
+              number: 80
