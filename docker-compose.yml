@@ -19,14 +19,14 @@ services:
       - 80:80 # Ingress controller port 80
       - 443:443 # Ingress controller port 443
     environment:
-      K3S_TOKEN: ${K3S_TOKEN:?err}
-      K3S_KUBECONFIG_OUTPUT: /output/kubeconfig.yaml
+      K3S_TOKEN: "mynodetoken"
+      K3S_KUBECONFIG_OUTPUT: "/output/kubeconfig.yaml"
       K3S_KUBECONFIG_MODE: "666"
     tmpfs:
       - /run
       - /var/run
     volumes:
-      - k3s-server:/var/lib/rancher/k3s
+      # - k3s-server:/var/lib/rancher/k3s
       - output:/output
 
   agent:
@@ -42,17 +42,19 @@ services:
         soft: 65535
         hard: 65535
     privileged: true
-    restart: always
     environment:
-      K3S_URL: https://server:6443
-      K3S_TOKEN: ${K3S_TOKEN:?err}
+      K3S_URL: "https://server:6443"
+      K3S_TOKEN: "mynodetoken"
 
   kubectl:
     build: .
     environment:
-      KUBECONFIG: /output/kubeconfig.yaml
+      KUBECONFIG: "/config/kubeconfig.yaml"
+      K3S_URL: "https://server:6443"
     volumes:
       - output:/output:ro
+    depends_on:
+      - server
 
 volumes:
   k3s-server: {}
