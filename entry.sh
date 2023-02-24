@@ -2,6 +2,6 @@
 
 set -euo pipefail
 
-arkade --help
+kubectl apply -f /kubernetes --recursive
 
 tail -f /dev/null

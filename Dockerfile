@@ -35,4 +35,6 @@ COPY entry.sh /
 
 RUN chmod +x /entry.sh
 
+COPY kubernetes/ kubernetes/
+
 CMD [ "/entry.sh" ]

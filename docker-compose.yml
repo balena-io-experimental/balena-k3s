@@ -1,25 +1,59 @@
 version: "2"
 
+# https://github.com/k3s-io/k3s/blob/master/docker-compose.yml
+
 services:
-  agent:
-    build: agent
+  server:
+    # https://hub.docker.com/r/rancher/k3s/tags
+    # https://github.com/k3s-io/k3s/blob/master/package/Dockerfile
+    image: "rancher/k3s:v1.26.1-k3s1"
+    command: server
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 65535
+        hard: 65535
     privileged: true
-    network_mode: host
+    ports:
+      - 6443:6443 # Kubernetes API Server
+      - 80:80 # Ingress controller port 80
+      - 443:443 # Ingress controller port 443
+    environment:
+      K3S_TOKEN: ${K3S_TOKEN:?err}
+      K3S_KUBECONFIG_OUTPUT: /output/kubeconfig.yaml
+      K3S_KUBECONFIG_MODE: "666"
     tmpfs:
       - /run
       - /var/run
     volumes:
-      - data:/var/lib/rancher/k3s
-      - config:/etc/rancher/k3s
+      - k3s-server:/var/lib/rancher/k3s
+      - output:/output
+
+  agent:
+    # https://hub.docker.com/r/rancher/k3s/tags
+    # https://github.com/k3s-io/k3s/blob/master/package/Dockerfile
+    image: "rancher/k3s:v1.26.1-k3s1"
+    tmpfs:
+      - /run
+      - /var/run
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 65535
+        hard: 65535
+    privileged: true
+    restart: always
+    environment:
+      K3S_URL: https://server:6443
+      K3S_TOKEN: ${K3S_TOKEN:?err}
 
   kubectl:
-    build: kubectl
-    network_mode: host
+    build: .
     environment:
-      KUBECONFIG: /config/k3s.yaml  # TODO: how to get this file when not in server mode?
+      KUBECONFIG: /output/kubeconfig.yaml
     volumes:
-      - config:/config:ro
+      - output:/output:ro
 
 volumes:
-  data: {}
-  config: {}
+  k3s-server: {}
+  output: {}
