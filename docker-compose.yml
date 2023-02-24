@@ -7,7 +7,7 @@ services:
     # https://hub.docker.com/r/rancher/k3s/tags
     # https://github.com/k3s-io/k3s/blob/master/package/Dockerfile
     image: "rancher/k3s:v1.26.1-k3s1"
-    command: server
+    command: server --tls-san server
     ulimits:
       nproc: 65535
       nofile:
@@ -26,7 +26,7 @@ services:
       - /run
       - /var/run
     volumes:
-      # - k3s-server:/var/lib/rancher/k3s
+      - k3s-server:/var/lib/rancher/k3s
       - output:/output
 
   agent:
@@ -48,9 +48,10 @@ services:
 
   kubectl:
     build: .
+    network_mode: host
     environment:
       K3S_URL: "https://server:6443"
-      KUBECONFIG: "/config/kubeconfig.yaml"
+      KUBECONFIG: "/output/kubeconfig.yaml"
     volumes:
       - output:/output:ro
     depends_on:
