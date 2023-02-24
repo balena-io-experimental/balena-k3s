@@ -4,7 +4,7 @@ set -euo pipefail
 
 mkdir -p /config
 
-sed "s|server: .+$|server: ${K3S_URL}|" /output/kubeconfig.yaml > /config/kubeconfig.yaml
+sed -r "s|server: .+$|server: https://$(dig +short server):6443|" /output/kubeconfig.yaml > /config/kubeconfig.yaml
 
 kubectl apply -f /kubernetes --recursive
 

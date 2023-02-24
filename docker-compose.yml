@@ -50,7 +50,6 @@ services:
     build: .
     environment:
       KUBECONFIG: "/config/kubeconfig.yaml"
-      K3S_URL: "https://server:6443"
     volumes:
       - output:/output:ro
     depends_on:
