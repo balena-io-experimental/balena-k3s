@@ -1,4 +1,4 @@
-version: "2"
+version: "2.1"
 
 # https://github.com/k3s-io/k3s/blob/master/docker-compose.yml
 
@@ -48,7 +48,7 @@ services:
     volumes:
       - k3s-agent:/var/lib/rancher/k3s
 
-  kubectl:
+  bastion:
     build: .
     restart: always
     network_mode: host

@@ -1,12 +1,12 @@
-# balena-kube
+# balena-k3s
 
 Run a Kubernetes cluster on balenaCloud via k3s!
 
 ## Remote development
 
-There is a bastion service with a pre-configured kubectl binary on every agent.
+There is a bastion service with a number of kubernetes tools preinstalled.
 
-Just open a terminal in the `kubectl` service via the balenaCloud dashboard or run
+Just open a terminal in the `bastion` service via the balenaCloud dashboard or run
 
 ```bash
 balena ssh $UUID kubectl
@@ -14,7 +14,7 @@ balena ssh $UUID kubectl
 
 ## Local development
 
-If you have local access to the IP of the server, you can use your workstation to run kubectl commands.
+If you have local access to the IP of the server, you can use your workstation to run kubernetes commands.
 
 First, copy the configuration from the server to your workstation. Keep this file secure!
 
