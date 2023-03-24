@@ -6,7 +6,7 @@ services:
   server:
     # https://hub.docker.com/r/rancher/k3s/tags
     # https://github.com/k3s-io/k3s/blob/master/package/Dockerfile
-    build: server
+    image: rancher/k3s:v1.26.2-k3s1
     ulimits:
       nproc: 65535
       nofile:
@@ -28,6 +28,11 @@ services:
     volumes:
       - k3s-server:/var/lib/rancher/k3s
       - output:/output
+    entrypoint: []
+    command:
+      - /bin/sh
+      - -c
+      - /bin/k3s server --tls-san=server $${EXTRA_K3S_SERVER_ARGS}
 
   agent:
     # https://hub.docker.com/r/rancher/k3s/tags

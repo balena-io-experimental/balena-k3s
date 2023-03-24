@@ -43,7 +43,7 @@ If you have local access to the IP of the server, you can use your workstation t
 First, copy the configuration from the server to your workstation. Keep this file secure!
 
 ```bash
-SERVER_IP=10.0.3.81 ; echo 'cat /output/kubeconfig.yaml' | balena ssh "${SERVER_IP}" server | sed "s/127.0.0.1/${SERVER_IP}/" > k3s.yaml
+SERVER_IP=10.0.3.98 ; echo 'cat /output/kubeconfig.yaml' | balena ssh "${SERVER_IP}" server | sed "s/127.0.0.1/${SERVER_IP}/" > k3s.yaml
 ```
 
 Then set your kubectl config path and run any commands.
