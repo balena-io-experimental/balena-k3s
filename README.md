@@ -2,6 +2,24 @@
 
 Run a Kubernetes cluster on balenaCloud via k3s!
 
+## Usage
+
+### MDNS
+
+Add the following records to your local DNS resolver pointing to the IP of your device.
+
+- `caddy.bob.local`
+- `api.bob.local`
+
+### Registry secrets
+
+In order to pull private docker images, you'll need to set some environment variables on the `bastion` service.
+
+- `DOCKER_USERNAME`
+- `DOCKER_PASSWORD`
+
+The `bastion` service will [create a docker-registry kubernetes secret for you](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-secret-by-providing-credentials-on-the-command-line).
+
 ## Remote development
 
 There is a bastion service with a number of kubernetes tools preinstalled.
@@ -26,21 +44,4 @@ Then set your kubectl config path and run any commands.
 
 ```bash
 KUBECONFIG="${PWD}/k3s.yaml" kubectl get nodes
-```
-
-### MDNS
-
-Add the following records to your local DNS resolver pointing to the IP of your device.
-
-- `caddy.bob.local`
-- `api.bob.local`
-
-### Registry secrets
-
-```bash
-kubectl create secret docker-registry image-pull-secret \
-    --docker-server='https://index.docker.io/v1/' \
-    --docker-username=<your-name> \
-    --docker-password=<your-pword> \
-    --docker-email=<your-email>
 ```
