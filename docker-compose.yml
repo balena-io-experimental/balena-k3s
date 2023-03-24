@@ -12,8 +12,7 @@ services:
       nofile:
         soft: 65535
         hard: 65535
-    # privileged: true
-    network_mode: host
+    privileged: true
     ports:
       - 6443:6443 # Kubernetes API Server
       - 80:80 # Ingress controller port 80
@@ -45,16 +44,16 @@ services:
     privileged: true
     environment:
       K3S_URL: "https://server:6443"
-      # K3S_URL: "https:127.0.0.1:6443"
       K3S_TOKEN: "mynodetoken"
     volumes:
       - k3s-agent:/var/lib/rancher/k3s
 
   kubectl:
     build: .
+    restart: always
     network_mode: host
     environment:
-      K3S_URL: "https://server:6443"
+      # K3S_URL: "https://server:6443"
       KUBECONFIG: "/output/kubeconfig.yaml"
     volumes:
       - output:/output:ro
