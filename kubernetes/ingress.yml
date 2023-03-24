@@ -7,7 +7,7 @@ metadata:
   name: api
 spec:
   rules:
-  - host: api.bob.local
+  - host: api.${TLD}
     http:
       paths:
       - path: "/"
@@ -17,7 +17,7 @@ spec:
             name: api
             port:
               name: http
-  - host: caddy.bob.local
+  - host: caddy.${TLD}
     http:
       paths:
       - path: "/"

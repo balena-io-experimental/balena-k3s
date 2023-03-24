@@ -4,9 +4,15 @@ Run a Kubernetes cluster on balenaCloud via k3s!
 
 ## Usage
 
+### Top Level Domain
+
+The default top level domain (TLD) is `bob.local` so services with ingress can expose `{service}.bob.local`.
+
+Change this to a custom top level domain, or a different local MDNS name, via the `TLD` environment variable.
+
 ### MDNS
 
-Add the following records to your local DNS resolver pointing to the IP of your device.
+If using a local MDNS name, add the following records to your local DNS resolver pointing to the IP of your device.
 
 - `caddy.bob.local`
 - `api.bob.local`

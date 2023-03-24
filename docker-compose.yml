@@ -53,8 +53,8 @@ services:
     restart: always
     network_mode: host
     environment:
-      # K3S_URL: "https://server:6443"
       KUBECONFIG: "/output/kubeconfig.yaml"
+      TLD: bob.local
     volumes:
       - output:/output:ro
     depends_on:
