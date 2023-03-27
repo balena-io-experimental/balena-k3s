@@ -1,4 +1,4 @@
-version: "2"
+version: "2.1"
 
 # https://github.com/k3s-io/k3s/blob/master/docker-compose.yml
 
@@ -6,14 +6,13 @@ services:
   server:
     # https://hub.docker.com/r/rancher/k3s/tags
     # https://github.com/k3s-io/k3s/blob/master/package/Dockerfile
-    build: server
+    image: rancher/k3s:v1.26.2-k3s1
     ulimits:
       nproc: 65535
       nofile:
         soft: 65535
         hard: 65535
-    # privileged: true
-    network_mode: host
+    privileged: true
     ports:
       - 6443:6443 # Kubernetes API Server
       - 80:80 # Ingress controller port 80
@@ -29,6 +28,11 @@ services:
     volumes:
       - k3s-server:/var/lib/rancher/k3s
       - output:/output
+    entrypoint: []
+    command:
+      - /bin/sh
+      - -c
+      - /bin/k3s server --tls-san=server $${EXTRA_K3S_SERVER_ARGS}
 
   agent:
     # https://hub.docker.com/r/rancher/k3s/tags
@@ -45,17 +49,17 @@ services:
     privileged: true
     environment:
       K3S_URL: "https://server:6443"
-      # K3S_URL: "https:127.0.0.1:6443"
       K3S_TOKEN: "mynodetoken"
     volumes:
       - k3s-agent:/var/lib/rancher/k3s
 
-  kubectl:
+  bastion:
     build: .
+    restart: always
     network_mode: host
     environment:
-      K3S_URL: "https://server:6443"
       KUBECONFIG: "/output/kubeconfig.yaml"
+      TLD: bob.local
     volumes:
       - output:/output:ro
     depends_on:
