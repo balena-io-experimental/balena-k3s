@@ -6,6 +6,7 @@ services:
   server:
     # https://hub.docker.com/r/rancher/k3s/tags
     # https://github.com/k3s-io/k3s/blob/master/package/Dockerfile
+    # https://docs.k3s.io/advanced#running-k3s-in-docker
     image: rancher/k3s:v1.26.2-k3s1
     ulimits:
       nproc: 65535
@@ -13,12 +14,13 @@ services:
         soft: 65535
         hard: 65535
     privileged: true
-    ports:
-      - 6443:6443 # Kubernetes API Server
-      - 80:80 # Ingress controller port 80
-      - 443:443 # Ingress controller port 443
+    # ports:
+    #   - 6443:6443 # Kubernetes API Server
+    #   - 80:80 # Ingress controller port 80
+    #   - 443:443 # Ingress controller port 443
+    network_mode: host
     environment:
-      K3S_TOKEN: "mynodetoken"
+      K3S_TOKEN: "mynodetoken" # https://rancher.com/docs/k3s/latest/en/installation/install-options/server-config/#token
       K3S_KUBECONFIG_OUTPUT: "/output/kubeconfig.yaml"
       K3S_KUBECONFIG_MODE: "666"
       EXTRA_K3S_SERVER_ARGS: ""
@@ -32,11 +34,12 @@ services:
     command:
       - /bin/sh
       - -c
-      - /bin/k3s server --tls-san=server $${EXTRA_K3S_SERVER_ARGS}
+      - /bin/k3s server $${EXTRA_K3S_SERVER_ARGS}
 
   agent:
     # https://hub.docker.com/r/rancher/k3s/tags
     # https://github.com/k3s-io/k3s/blob/master/package/Dockerfile
+    # https://docs.k3s.io/advanced#running-k3s-in-docker
     image: "rancher/k3s:v1.26.2-k3s1"
     tmpfs:
       - /run
@@ -48,7 +51,7 @@ services:
         hard: 65535
     privileged: true
     environment:
-      K3S_URL: "https://server:6443"
+      # K3S_URL: "https://server:6443"
       K3S_TOKEN: "mynodetoken"
     volumes:
       - k3s-agent:/var/lib/rancher/k3s

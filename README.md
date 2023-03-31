@@ -4,50 +4,45 @@ Run a Kubernetes cluster on balenaCloud via k3s!
 
 ## Usage
 
-### Top Level Domain
+### Environment Variables
 
-The default top level domain (TLD) is `bob.local` so services with ingress can expose `{service}.bob.local`.
+The following environment variables are supported:
 
-Change this to a custom top level domain, or a different local MDNS name, via the `TLD` environment variable.
+- (All Services) `K3S_TOKEN`: Used to authenticate nodes and ensure secure communication between them
+- (Server) `EXTRA_K3S_SERVER_ARGS`: Optional extra args provided to `k3s server`
+- (Agent) `K3S_URL`: Full URL of the k3s API server (e.g. `https://10.0.3.98:6443`)
+- (Bastion) `DOCKER_USERNAME`: Required if using private images on DockerHub
+- (Bastion) `DOCKER_PASSWORD`: Required if using private images on DockerHub
 
 ### MDNS
 
-If using a local MDNS name, add the following records to your local DNS resolver pointing to the IP of your device.
+If using a local MDNS name instead of a TLD, add the following records to your local DNS resolver pointing to the IP of your device.
 
 - `caddy.bob.local`
 - `api.bob.local`
 
-### Registry secrets
-
-In order to pull private docker images, you'll need to set some environment variables on the `bastion` service.
-
-- `DOCKER_USERNAME`
-- `DOCKER_PASSWORD`
-
-The `bastion` service will [create a docker-registry kubernetes secret for you](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-secret-by-providing-credentials-on-the-command-line).
-
-## Remote development
+### On-device development
 
 There is a bastion service with a number of kubernetes tools preinstalled.
 
 Just open a terminal in the `bastion` service via the balenaCloud dashboard or run
 
 ```bash
-balena ssh $UUID kubectl
+balena ssh $UUID bastion
 ```
 
-## Local development
+### Remote development
 
-If you have local access to the IP of the server, you can use your workstation to run kubernetes commands.
+If you have access to the IP of the server, you can use your workstation to run kubernetes commands.
 
 First, copy the configuration from the server to your workstation. Keep this file secure!
 
 ```bash
-SERVER_IP=10.0.3.98 ; echo 'cat /output/kubeconfig.yaml' | balena ssh "${SERVER_IP}" server | sed "s/127.0.0.1/${SERVER_IP}/" > k3s.yaml
+SERVER_IP=10.0.3.98 ; echo 'cat /output/kubeconfig.yaml' | balena ssh "${SERVER_IP}" server | sed "s/127.0.0.1/${SERVER_IP}/" > kubeconfig.yaml
 ```
 
-Then set your kubectl config path and run any commands.
+Then set your kubeconfig path and run any commands.
 
 ```bash
-KUBECONFIG="${PWD}/k3s.yaml" kubectl get nodes
+KUBECONFIG="${PWD}/kubeconfig.yaml" kubectl get nodes
 ```
