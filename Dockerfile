@@ -31,6 +31,7 @@ RUN arkade get --progress=false \
     k3sup@0.12.12 \
     k9s@v0.27.2 \
     kubectl@v1.24.2 \
+    kustomize@4.4.1 \
     yq@v4.30.8
 
 COPY entry.sh /

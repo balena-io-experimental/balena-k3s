@@ -21,6 +21,18 @@ If using a local MDNS name instead of a TLD, add the following records to your l
 - `caddy.bob.local`
 - `api.bob.local`
 
+### Self-Signed TLS Certificate
+
+You can use cert-manager to provision self-signed certificates for your Kubernetes cluster. You can import the CA of the self-signed certificates into your web browser by exporting it from Kubernetes and saving it into a file.  You can then import this CA certificate through your browser's security settings.
+
+You can use the commands below to extract the certificate from the cluster based on the example Kubernetes configuration that comes with this project.
+
+```bash
+SERVER_IP=10.0.3.98
+echo 'kubectl get secret selfsigned-cert -o jsonpath="{.data.ca\.crt}" | base64 --decode > ca.crt' | balena ssh ${SERVER_IP} bastion
+echo 'cat ca.crt' | balena ssh ${SERVER_IP} bastion > ca.crt
+```
+
 ### On-device development
 
 There is a bastion service with a number of kubernetes tools preinstalled.
@@ -46,3 +58,4 @@ Then set your kubeconfig path and run any commands.
 ```bash
 KUBECONFIG="${PWD}/kubeconfig.yaml" kubectl get nodes
 ```
+
