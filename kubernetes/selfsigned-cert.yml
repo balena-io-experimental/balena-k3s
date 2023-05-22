@@ -1,0 +1,30 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: selfsigned-cert
+  namespace: default
+spec:
+  secretName: selfsigned-cert
+  issuerRef:
+    name: ca-issuer
+    kind: Issuer
+  usages:
+    - server auth
+    - client auth
+  commonName: 'caddy.${TLD}'
+  dnsNames:
+    - 'caddy.${TLD}'
+    - 'monitor.${TLD}'
+  subject:
+    organizations:
+    - balena
+    organizationalUnits:
+    - devops
+    localities:
+    - Seattle
+    provinces:
+    - Washington
+    countries:
+    - US
+

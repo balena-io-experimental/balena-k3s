@@ -6,13 +6,13 @@ metadata:
     kompose.version: 1.26.1 (HEAD)
   creationTimestamp: null
   labels:
-    app: db
-  name: db
+    io.kompose.service: s3
+  name: s3
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: db
+      io.kompose.service: s3
   strategy:
     type: Recreate
   template:
@@ -22,12 +22,14 @@ spec:
         kompose.version: 1.26.1 (HEAD)
       creationTimestamp: null
       labels:
-        app: db
+        io.kompose.service: s3
     spec:
       containers:
         - env:
             - name: ADMIN_EMAIL
               value: bob@balena.local
+            - name: BUCKETS
+              value: balena-images;balena-delta
             - name: DNS_TLD
               value: bob.local
             - name: MDNS_TLD
@@ -38,50 +40,41 @@ spec:
               value: bob@balena.local
             - name: VERBOSE
               value: "false"
-          image: balena/open-balena-db:v5.1.3
+            - name: S3_MINIO_ACCESS_KEY
+              value: 'minioadmin'
+            - name: S3_MINIO_SECRET_KEY
+              value: 'minioadmin'
+          image: balena/open-balena-s3:v2.16.1
           livenessProbe:
             exec:
               command:
-                - pg_isready
+                - /usr/src/app/docker-hc
             failureThreshold: 3
             periodSeconds: 45
             timeoutSeconds: 15
-          name: db
+          name: s3
           resources: {}
+          securityContext:
+            capabilities:
+              add:
+                - SYS_ADMIN
+                - SYS_RESOURCE
           volumeMounts:
-            - mountPath: /var/lib/postgresql/data
-              name: db-data
+            - mountPath: /export
+              name: s3-data
+            - mountPath: /run
+              name: s3-tmpfs0
+            - mountPath: /sys/fs/cgroup
+              name: s3-tmpfs1
       restartPolicy: Always
       volumes:
-        - name: db-data
+        - name: s3-data
           persistentVolumeClaim:
-            claimName: db-data
+            claimName: s3-data
+        - emptyDir:
+            medium: Memory
+          name: s3-tmpfs0
+        - emptyDir:
+            medium: Memory
+          name: s3-tmpfs1
 status: {}
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  creationTimestamp: null
-  labels:
-    app: db-data
-  name: db-data
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 500Mi
-status: {}
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: db
-spec:
-  selector:
-    app: db
-  ports:
-  - name: tcp
-    port: 5432
-    targetPort: 5432
-  type: LoadBalancer

@@ -1,8 +1,16 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - api.yml
   - caddy.yml
-  - db.yml
+  - ca-cert.yml
+  - ca-issuer.yml
+  - cert-manager.yml
   - ingress.yml
+  - monitor-data-persistentvolumeclaim.yaml
+  - monitor-deployment.yaml
+  - monitor-service.yml
+  - selfsigned-cert.yml
+  - selfsigned-issuer.yml
+  - s3-data-persistentvolumeclaim.yaml
+  - s3-deployment.yaml
 
