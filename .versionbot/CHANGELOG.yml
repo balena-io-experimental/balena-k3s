@@ -1,0 +1,66 @@
+- commits:
+    - subject: Add Flowzone workflow
+      hash: b6dc7943be414f0435910b7655eea470c2eba743
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+    - subject: Deploy each node as a server in an HA etcd cluster
+      hash: 8d5cceb9dc3f4d844d9d53b1438cf92ba7c62772
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+    - subject: Uses cert-manager for self-signed HTTPS certificates.
+      hash: 89448e5aec28b7306e38d603970e971556d9a41f
+      body: |
+        This provides an example for how we can provision
+        a self-signed certificate using cert-manager.  This
+        is a kubernetes equivelent for our balena cert-manager
+        which uses CFSSL.
+
+        The kubernetes cert-manager seamlessly works with ingresses
+        and is also capable of requesting and renewing certificates
+        from LetsEncrypt.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Carlo Miguel F. Cruz <carloc@balena.io>
+        signed-off-by: Carlo Miguel F. Cruz <carloc@balena.io>
+      author: Carlo Miguel F. Cruz
+    - subject: Add monitor deployment. Delete API until fully working.
+      hash: 181d52ba20afc475f11296ae7950beabcf94b241
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Carlo Miguel F. Cruz <carloc@balena.io>
+        signed-off-by: Carlo Miguel F. Cruz <carloc@balena.io>
+      author: Carlo Miguel F. Cruz
+    - subject: Apply K8s manifests using kustomizations every set interval.
+      hash: d2f9b9999c6f965077920c29b25c4343dbc589a5
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Carlo Miguel F. Cruz <carloc@balena.io>
+        signed-off-by: Carlo Miguel F. Cruz <carloc@balena.io>
+      author: Carlo Miguel F. Cruz
+    - subject: Add balena-apii, ingress and postgresql k8s deployments.
+      hash: 3354081286b2770b2da829c0887d1179a109fc5e
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Carlo Miguel F. Cruz <carloc@balena.io>
+        signed-off-by: Carlo Miguel F. Cruz <carloc@balena.io>
+      author: Carlo Miguel F. Cruz
+  version: 0.1.0
+  title: ""
+  date: 2023-06-23T19:15:52.060Z
