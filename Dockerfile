@@ -24,7 +24,8 @@ RUN curl -sLS -o get.sh "${ARKADE_URL}" && \
 
 ENV PATH "${PATH}:/root/.arkade/bin/"
 
-RUN arkade get --progress=false \
+RUN arkade version && \
+    arkade get --progress=false \
     flux@v0.39.0 \
     helm@v3.11.1 \
     jq@jq-1.6 \
