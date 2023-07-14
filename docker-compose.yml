@@ -4,10 +4,8 @@ version: "2.1"
 
 services:
   server:
-    # https://hub.docker.com/r/rancher/k3s/tags
-    # https://github.com/k3s-io/k3s/blob/master/package/Dockerfile
     # https://docs.k3s.io/advanced#running-k3s-in-docker
-    image: rancher/k3s:v1.26.2-k3s1
+    build: server
     ulimits:
       nproc: 65535
       nofile:
@@ -23,7 +21,6 @@ services:
     network_mode: host
     # https://docs.k3s.io/cli/server#cluster-options
     environment:
-      # K3S_URL: "https://localhost:6443"
       K3S_TOKEN: "mynodetoken"
       K3S_KUBECONFIG_OUTPUT: "/shared/kubeconfig.yaml"
       K3S_KUBECONFIG_MODE: "666"
@@ -34,13 +31,6 @@ services:
     volumes:
       - k3s-server:/var/lib/rancher/k3s
       - shared:/shared
-    entrypoint: []
-    # https://docs.k3s.io/cli/server
-    # https://docs.k3s.io/datastore/ha-embedded
-    command:
-      - /bin/sh
-      - -c
-      - /bin/k3s server --cluster-init $${EXTRA_K3S_SERVER_ARGS}
 
   bastion:
     build: bastion
