@@ -1,4 +1,18 @@
 - commits:
+    - subject: Remove balena-specific example deployment files
+      hash: 807ac5846ac27c27ced920c043d558a5284dbf5f
+      body: |
+        Keep the generic getting started examples.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+  version: 0.2.1
+  title: ""
+  date: 2023-07-14T14:43:18.725Z
+- commits:
     - subject: Image pull secrets should be defined as kubernetes manifests.
       hash: 31dec09b2865b5aec685775ee05cff1bd945739f
       body: |
