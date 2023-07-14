@@ -5,6 +5,7 @@ resources:
   - ca-cert.yml
   - ca-issuer.yml
   - cert-manager.yml
+  - image-pull-secret.yml
   - ingress.yml
   - monitor-data-persistentvolumeclaim.yaml
   - monitor-deployment.yaml

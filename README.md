@@ -23,8 +23,45 @@ The following environment variables are supported:
 - (server) `K3S_TOKEN`: Used to authenticate nodes and ensure secure communication between them
 - (server) `K3S_URL`: HTTPS host and port of the first nodes that initialized the cluster, e.g. `https://192.168.1.105:6443`
 - (server) `EXTRA_K3S_SERVER_ARGS`: Optional extra args provided to `k3s server`, e.g. `--tls-san=35.174.115.184`
-- (bastion) `DOCKER_USERNAME`: Required if using private images on DockerHub
-- (bastion) `DOCKER_PASSWORD`: Required if using private images on DockerHub
+
+#### Image Pull Secrets
+If you need to use image pull secrets to pull images from private repositories,
+you can include an image pull secret manifest for that registry in your Kubernetes
+kustomization.
+
+Start by generating the `.dockerconfigjson` data for the target registry.
+The following commands should generate the configuration data in base64 format
+and set the generated configuration into an environment variable for your fleet or device.
+```
+REGISTRY_HOST='https://index.docker.io/v1/'
+REGISTRY_USERNAME=myDockerUsername
+REGISTRY_PASSWORD=myDockerAccessToken
+IMAGE_PULL_SECRET=$(kubectl create secret docker-registry image-pull-secret \
+    --docker-server="${REGISTRY_HOST}" \
+    --docker-username="${REGISTRY_USERNAME}" \
+    --docker-password="${REGISTRY_PASSWORD}" \
+    --dry-run=client -o jsonpath='{.data.\.dockerconfigjson}')
+balena env add IMAGE_PULL_SECRET "${IMAGE_PULL_SECRET}" \
+  --fleet myFleet --service bastion
+```
+
+Add a image pull secret YAML file in your kubernetes directory and include
+this file in the kustomization files list. Here is a sample image pull secret
+manifest file.
+```
+apiVersion: v1
+data:
+  .dockerconfigjson: ${IMAGE_PULL_SECRET}
+kind: Secret
+metadata:
+  creationTimestamp: null
+  name: image-pull-secret
+type: kubernetes.io/dockerconfigjson
+```
+
+The environment variable placeholder in the image pull secret YAML file
+should match the environment variable containing the `.dockerconfigjson`
+data.
 
 ### Networking
 
