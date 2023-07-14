@@ -15,7 +15,6 @@ spec:
   commonName: 'caddy.${TLD}'
   dnsNames:
     - 'caddy.${TLD}'
-    - 'monitor.${TLD}'
   subject:
     organizations:
     - balena
