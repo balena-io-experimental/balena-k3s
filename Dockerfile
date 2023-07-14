@@ -31,8 +31,8 @@ RUN arkade version && \
     jq@jq-1.6 \
     k3sup@0.12.12 \
     k9s@v0.27.2 \
-    kubectl@v1.24.2 \
-    kustomize@4.4.1 \
+    kubectl@v1.26.2 \
+    kustomize@v5.0.3 \
     yq@v4.30.8
 
 COPY entry.sh /
