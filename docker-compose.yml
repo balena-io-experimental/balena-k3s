@@ -43,7 +43,7 @@ services:
       - /bin/k3s server --cluster-init $${EXTRA_K3S_SERVER_ARGS}
 
   bastion:
-    build: .
+    build: bastion
     network_mode: host
     environment:
       KUBECONFIG: "/shared/kubeconfig.yaml"
