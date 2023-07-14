@@ -1,4 +1,19 @@
 - commits:
+    - subject: Updates some Kubernetes client tools.
+      hash: cf8684e950898d8e3e0f681f4567e3de01913546
+      body: |
+        - kubectl v1.24.2 -> v1.26.2
+        - kustomize v4.4.1 -> v5.0.3
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Carlo Miguel F. Cruz <carloc@balena.io>
+        signed-off-by: Carlo Miguel F. Cruz <carloc@balena.io>
+      author: Carlo Miguel F. Cruz
+  version: 0.1.1
+  title: ""
+  date: 2023-07-14T04:09:19.057Z
+- commits:
     - subject: Add Flowzone workflow
       hash: b6dc7943be414f0435910b7655eea470c2eba743
       body: ""
