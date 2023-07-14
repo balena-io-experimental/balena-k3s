@@ -1,4 +1,24 @@
 - commits:
+    - subject: Image pull secrets should be defined as kubernetes manifests.
+      hash: 31dec09b2865b5aec685775ee05cff1bd945739f
+      body: |
+        The feature for automatic creation of an image pull secret for
+        docker.io has been removed.
+
+        Image pull secrets should now be defined as a kubernetes manifest
+        included in the kustomization.  The instructions in the README
+        have been updated to show how to add an image pull secret
+        for Dockerhub.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Carlo Miguel F. Cruz <carloc@balena.io>
+        signed-off-by: Carlo Miguel F. Cruz <carloc@balena.io>
+      author: Carlo Miguel F. Cruz
+  version: 0.2.0
+  title: ""
+  date: 2023-07-14T14:31:15.689Z
+- commits:
     - subject: Updates some Kubernetes client tools.
       hash: cf8684e950898d8e3e0f681f4567e3de01913546
       body: |
