@@ -8,7 +8,6 @@ spec:
   tls:
   - hosts:
     - caddy.${TLD}
-    - monitor.${TLD}
     secretName: selfsigned-cert
   rules:
   - host: caddy.${TLD}
@@ -21,14 +20,3 @@ spec:
             name: caddy
             port:
               name: http
-  - host: monitor.${TLD}
-    http:
-      paths:
-      - path: "/"
-        pathType: Prefix
-        backend:
-          service:
-            name: monitor
-            port:
-              name: http
-
