@@ -23,6 +23,7 @@ The following environment variables are supported:
 - (server) `K3S_TOKEN`: Used to authenticate nodes and ensure secure communication between them
 - (server) `K3S_URL`: HTTPS host and port of the first nodes that initialized the cluster, e.g. `https://192.168.1.105:6443`
 - (server) `EXTRA_K3S_SERVER_ARGS`: Optional extra args provided to `k3s server`, e.g. `--tls-san=35.174.115.184`
+- (bastion) `UPDATE_INTERVAL`: Provide an update interval to automatically re-apply kubernetes config, eg. `600s`
 
 #### Image Pull Secrets
 If you need to use image pull secrets to pull images from private repositories,
