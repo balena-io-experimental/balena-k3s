@@ -1,4 +1,18 @@
 - commits:
+    - subject: Remove bastion entrypoint script and kubernetes manifests
+      hash: a34003bee1cc857fcf64bcf05d0ef01acdf517c0
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 0.2.3
+  title: ""
+  date: 2023-09-01T19:14:50.854Z
+- commits:
     - subject: Add balena.yml for release versioning
       hash: 5f5a986651fd6542a738552491fc513a3057a8e0
       body: ""
