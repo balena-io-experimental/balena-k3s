@@ -35,10 +35,9 @@ RUN arkade version && \
     kustomize@v5.0.3 \
     yq@v4.30.8
 
-COPY entry.sh /
-
-RUN chmod +x /entry.sh
+COPY bastion.sh /bastion.sh
+RUN chmod +x /bastion.sh
 
 COPY kubernetes/ /kubernetes
 
-CMD [ "/entry.sh" ]
+CMD [ "/bastion.sh" ]
