@@ -18,53 +18,11 @@ so a reasonably performant VPS or Intel NUC is suggested.
 
 ### Environment Variables
 
-The following environment variables are supported:
+The following environment variables are supported on the fleet/device:
 
 - (server) `K3S_TOKEN`: Used to authenticate nodes and ensure secure communication between them
-- (server) `K3S_URL`: HTTPS host and port of the first nodes that initialized the cluster, e.g. `https://192.168.1.105:6443`
+- (server) `K3S_URL`: HTTPS host and port of the first node(s) that initialized the cluster, e.g. `https://192.168.1.105:6443`
 - (server) `EXTRA_K3S_SERVER_ARGS`: Optional extra args provided to `k3s server`, e.g. `--tls-san=35.174.115.184`
-- (bastion) `UPDATE_INTERVAL`: Provide an update interval to automatically apply kubernetes manifests, eg. `600s`
-
-#### Image Pull Secrets
-If you need to use image pull secrets to pull images from private repositories,
-you can include an image pull secret manifest for that registry in your Kubernetes
-kustomization.
-
-Start by generating the `.dockerconfigjson` data for the target registry.
-The following commands should generate the configuration data in base64 format
-and set the generated configuration into an environment variable for your fleet or device.
-
-```bash
-REGISTRY_HOST='https://index.docker.io/v1/'
-REGISTRY_USERNAME=myDockerUsername
-REGISTRY_PASSWORD=myDockerAccessToken
-IMAGE_PULL_SECRET=$(kubectl create secret docker-registry image-pull-secret \
-    --docker-server="${REGISTRY_HOST}" \
-    --docker-username="${REGISTRY_USERNAME}" \
-    --docker-password="${REGISTRY_PASSWORD}" \
-    --dry-run=client -o jsonpath='{.data.\.dockerconfigjson}')
-balena env add IMAGE_PULL_SECRET "${IMAGE_PULL_SECRET}" \
-  --fleet myFleet --service bastion
-```
-
-Add a image pull secret YAML file in your kubernetes directory and include
-this file in the kustomization files list. Here is a sample image pull secret
-manifest file.
-
-```yaml
-apiVersion: v1
-data:
-  .dockerconfigjson: ${IMAGE_PULL_SECRET}
-kind: Secret
-metadata:
-  creationTimestamp: null
-  name: image-pull-secret
-type: kubernetes.io/dockerconfigjson
-```
-
-The environment variable placeholder in the image pull secret YAML file
-should match the environment variable containing the `.dockerconfigjson`
-data.
 
 ### Networking
 
@@ -105,7 +63,7 @@ echo 'kubectl get secret selfsigned-cert -o jsonpath="{.data.ca\.crt}" | base64 
 echo 'cat ca.crt' | balena ssh ${SERVER_IP} bastion > ca.crt
 ```
 
-### On-device development
+### On-device troubleshooting
 
 There is a bastion service with a number of kubernetes tools preinstalled.
 
@@ -116,18 +74,80 @@ balena ssh $UUID bastion
 kubectl get nodes
 ```
 
-### Remote development
+### Deploy example application
 
-If you have access to the IP of the server, you can use your workstation to run kubernetes commands.
+After deploying the app above to a fleet of devices, it's time to start pushing some kubernetes applications!
 
-First, copy the configuration from the server to your workstation. Keep this file secure!
+Requires:
+
+- `kubectl` to run kubernetes commands against your cluster
+- `envsubst` to substitute environment variables in the example kubernetes manifests
+- the balena UUID of one of your server nodes
+
+1. Clone this repository, including the example [kubernetes](./kubernetes) manifests.
+2. Create a configuration file with keys to authenticate your workstation to the cluster:
 
 ```bash
-SERVER_IP=192.168.1.105 ; echo 'cat /output/kubeconfig.yaml' | balena ssh "${SERVER_IP}" server | sed "s/127.0.0.1/${SERVER_IP}/" > kubeconfig.yaml
+UUID=f1a9b4a7f01d4979b05b8230addeae87
+balena ssh $UUID bastion
+cat /shared/kubeconfig.yaml # copy-paste this content to a local kubeconfig.yaml file (TODO: copy directly)
+export KUBECONFIG="${PWD}/kubeconfig.yaml"
 ```
 
-Then set your kubeconfig path and run any commands.
+3. Open a tunnel to the controller port of the cluster node, keep this running in another tab
 
 ```bash
-KUBECONFIG="${PWD}/kubeconfig.yaml" kubectl get nodes
+UUID=f1a9b4a7f01d4979b05b8230addeae87
+balena tunnel $UUID -p 6443:6443
+kubectl get nodes # success?
 ```
+
+4. Apply manifests while substituting environment variables as needed:
+
+```bash
+find ./kubernetes -name "*.yml" -exec sh -c 'envsubst < "$1"' _ {} \; | kubectl apply -f -
+```
+
+#### Image Pull Secrets
+
+If you need to use image pull secrets to pull images from private repositories,
+you can include an image pull secret manifest for that registry in your Kubernetes
+kustomization.
+
+Start by generating the `.dockerconfigjson` data for the target registry.
+The following commands should generate the configuration data in base64 format
+and set the generated configuration into an environment variable for your fleet or device.
+
+```bash
+REGISTRY_HOST='https://index.docker.io/v1/'
+REGISTRY_USERNAME=myDockerUsername
+REGISTRY_PASSWORD=myDockerAccessToken
+IMAGE_PULL_SECRET=$(kubectl create secret docker-registry image-pull-secret \
+    --docker-server="${REGISTRY_HOST}" \
+    --docker-username="${REGISTRY_USERNAME}" \
+    --docker-password="${REGISTRY_PASSWORD}" \
+    --dry-run=client -o jsonpath='{.data.\.dockerconfigjson}')
+```
+
+Add a image pull secret YAML file in your kubernetes directory and include
+this file in the kustomization files list. Here is a sample image pull secret
+manifest file.
+
+```yaml
+apiVersion: v1
+data:
+  .dockerconfigjson: ${IMAGE_PULL_SECRET}
+kind: Secret
+metadata:
+  creationTimestamp: null
+  name: image-pull-secret
+type: kubernetes.io/dockerconfigjson
+```
+
+The environment variable placeholder in the image pull secret YAML file
+should match the environment variable containing the `.dockerconfigjson`
+data.
+
+## Contributing
+
+Please open an issue or submit a pull request with any features, fixes, or changes.

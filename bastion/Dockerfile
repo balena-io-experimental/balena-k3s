@@ -35,9 +35,4 @@ RUN arkade version && \
     kustomize@v5.0.3 \
     yq@v4.30.8
 
-COPY bastion.sh /bastion.sh
-RUN chmod +x /bastion.sh
-
-COPY kubernetes/ /kubernetes
-
-CMD [ "/bastion.sh" ]
+CMD [ "tail" , "-f", "/dev/null" ]
