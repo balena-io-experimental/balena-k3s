@@ -1,4 +1,18 @@
 - commits:
+    - subject: Update to latest arkade and build from source
+      hash: 1fe387ac9a5d99d91b1b9a7fb4ed1b2b9ce47efe
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 0.2.4
+  title: ""
+  date: 2023-09-01T19:40:45.426Z
+- commits:
     - subject: Remove bastion entrypoint script and kubernetes manifests
       hash: a34003bee1cc857fcf64bcf05d0ef01acdf517c0
       body: ""
