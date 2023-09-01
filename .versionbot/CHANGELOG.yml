@@ -1,4 +1,50 @@
 - commits:
+    - subject: Add balena.yml for release versioning
+      hash: 5f5a986651fd6542a738552491fc513a3057a8e0
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: Only apply kubernetes manifests if UPDATE_INTERVAL is provided
+      hash: 88a8b105af2d3749ca7f6f401824e25a55ad26e9
+      body: |
+        This prevents multiple bastion services in a cluster from
+        overwriting manual changes performed during development.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: Create a custom entrypoint for the server container
+      hash: fd997cf743f9081943247be2f9838b053377224d
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: Make update interval optional and ignore failures
+      hash: 9473968d49e093b5934348df1c7130b1fc5eb6b5
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 0.2.2
+  title: ""
+  date: 2023-09-01T18:05:06.589Z
+- commits:
     - subject: Remove balena-specific example deployment files
       hash: 807ac5846ac27c27ced920c043d558a5284dbf5f
       body: |
