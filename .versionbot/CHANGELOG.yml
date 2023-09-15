@@ -1,4 +1,18 @@
 - commits:
+    - subject: Improve kubeconfig copy steps
+      hash: 219c68047079f16709ad1d831445e9046c2c5549
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 0.2.5
+  title: ""
+  date: 2023-09-15T13:20:09.505Z
+- commits:
     - subject: Update to latest arkade and build from source
       hash: 1fe387ac9a5d99d91b1b9a7fb4ed1b2b9ce47efe
       body: ""
