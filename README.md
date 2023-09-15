@@ -85,24 +85,28 @@ Requires:
 - the balena UUID of one of your server nodes
 
 1. Clone this repository, including the example [kubernetes](./kubernetes) manifests.
-2. Create a configuration file with keys to authenticate your workstation to the cluster:
+2. Copy the configuration file with keys to authenticate your workstation to the cluster:
 
 ```bash
-UUID=f1a9b4a7f01d4979b05b8230addeae87
-balena ssh $UUID bastion
-cat /shared/kubeconfig.yaml # copy-paste this content to a local kubeconfig.yaml file (TODO: copy directly)
+UUID=cf38d3c61c39429ab379e0a87d3689dd
+echo 'find /mnt/data/docker/volumes -name kubeconfig.yaml -exec cat {} \; ; exit' | balena ssh $UUID | grep -v '===' | grep -v 'Welcome' > kubeconfig.yaml
 export KUBECONFIG="${PWD}/kubeconfig.yaml"
 ```
 
 3. Open a tunnel to the controller port of the cluster node, keep this running in another tab
 
 ```bash
-UUID=f1a9b4a7f01d4979b05b8230addeae87
+UUID=cf38d3c61c39429ab379e0a87d3689dd
 balena tunnel $UUID -p 6443:6443
-kubectl get nodes # success?
 ```
 
-4. Apply manifests while substituting environment variables as needed:
+4. Check if the cluster is reachable over the tunnel
+
+```bash
+kubectl get nodes
+```
+
+5. Apply manifests while substituting environment variables as needed:
 
 ```bash
 find ./kubernetes -name "*.yml" -exec sh -c 'envsubst < "$1"' _ {} \; | kubectl apply -f -
