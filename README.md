@@ -44,25 +44,6 @@ The following ports should be open to expose ingress web services:
 If nodes are separated by firewalls or NATs, you might need to specify the public facing IP via `EXTRA_K3S_SERVER_ARGS=--tls-san=35.174.115.184`
 and make sure the communication ports above are open between the nodes.
 
-#### MDNS
-
-If using a local MDNS name instead of a TLD, add the following records to your local DNS resolver pointing to the IP of your device.
-
-- `caddy.bob.local`
-- `api.bob.local`
-
-#### Self-Signed TLS Certificate
-
-You can use cert-manager to provision self-signed certificates for your Kubernetes cluster. You can import the CA of the self-signed certificates into your web browser by exporting it from Kubernetes and saving it into a file. You can then import this CA certificate through your browser's security settings.
-
-You can use the commands below to extract the certificate from the cluster based on the example Kubernetes configuration that comes with this project.
-
-```bash
-SERVER_IP=192.168.1.105
-echo 'kubectl get secret selfsigned-cert -o jsonpath="{.data.ca\.crt}" | base64 --decode > ca.crt' | balena ssh ${SERVER_IP} bastion
-echo 'cat ca.crt' | balena ssh ${SERVER_IP} bastion > ca.crt
-```
-
 ### On-device troubleshooting
 
 There is a bastion service with a number of kubernetes tools preinstalled.
@@ -78,14 +59,16 @@ kubectl get nodes
 
 After deploying the app above to a fleet of devices, it's time to start pushing some kubernetes applications!
 
+This guide deploys a sample Caddy server into your new Kubernetes cluster and makes it accessible through an ingress with a self-signed TLS certificate.
+
 Requires:
 
 - `kubectl` to run kubernetes commands against your cluster
-- `envsubst` to substitute environment variables in the example kubernetes manifests
 - the balena UUID of one of your server nodes
 
-1. Clone this repository, including the example [kubernetes](./kubernetes) manifests.
-2. Copy the configuration file with keys to authenticate your workstation to the cluster:
+1. Clone this repository, including the example [sample_cluster](./sample_cluster) kubernetes manifests.
+
+2. Copy the configuration file with keys to authenticate your workstation to the cluster.
 
 ```bash
 UUID=cf38d3c61c39429ab379e0a87d3689dd
@@ -93,54 +76,70 @@ echo 'find /mnt/data/docker/volumes -name kubeconfig.yaml -exec cat {} \; ; exit
 export KUBECONFIG="${PWD}/kubeconfig.yaml"
 ```
 
-3. Open a tunnel to the controller port of the cluster node, keep this running in another tab
+3. Open a tunnel to the controller port of the cluster node, keep this running in another tab.
 
 ```bash
 UUID=cf38d3c61c39429ab379e0a87d3689dd
 balena tunnel $UUID -p 6443:6443
 ```
 
-4. Check if the cluster is reachable over the tunnel
+4. Check if the cluster is reachable over the tunnel.
 
 ```bash
 kubectl get nodes
 ```
 
-5. Apply manifests while substituting environment variables as needed:
-
-```bash
-find ./kubernetes -name "*.yml" -exec sh -c 'envsubst < "$1"' _ {} \; | kubectl apply -f -
-```
-
-#### Image Pull Secrets
-
-If you need to use image pull secrets to pull images from private repositories,
-you can include an image pull secret manifest for that registry in your Kubernetes
-kustomization.
-
-Start by generating the `.dockerconfigjson` data for the target registry.
-The following commands should generate the configuration data in base64 format
-and set the generated configuration into an environment variable for your fleet or device.
-
+5. Generate an image pull secret to allow Kubernetes to pull from private docker registries.
 ```bash
 REGISTRY_HOST='https://index.docker.io/v1/'
 REGISTRY_USERNAME=myDockerUsername
 REGISTRY_PASSWORD=myDockerAccessToken
-IMAGE_PULL_SECRET=$(kubectl create secret docker-registry image-pull-secret \
+kubectl create secret docker-registry image-pull-secret \
     --docker-server="${REGISTRY_HOST}" \
     --docker-username="${REGISTRY_USERNAME}" \
     --docker-password="${REGISTRY_PASSWORD}" \
-    --dry-run=client -o jsonpath='{.data.\.dockerconfigjson}')
+    --dry-run=client -o yaml > sample_cluster/image-pull-secret.yml
 ```
 
-Add a image pull secret YAML file in your kubernetes directory and include
-this file in the kustomization files list. Here is a sample image pull secret
-manifest file.
+6. Apply manifests using Kustomization file and wait for a few minutes for the resources to be provisioned.
+
+```bash
+kubectl apply -k sample_cluster/
+```
+
+7. Save the self-signed CA certificate and import it into your browser.  This will allow you to access the sample Caddy server using https.
+```bash
+kubectl get secret selfsigned-cert -o jsonpath="{.data.ca\.crt}" | base64 --decode > ca.crt
+```
+
+8. Add `caddy.balena.local` to your local DNS resolver pointing to the IP of your device. This will allow you to access https://caddy.balena.local from your workstation.
+
+9. Optional: Delete the resources deployed in the cluster.
+```
+kubectl delete -k sample_cluster/
+```
+
+
+#### Kustomizations
+
+
+A Kustomization is a file or directory that describes how to customize Kubernetes resources. Kustomization allows for easy and efficient management of Kubernetes configurations across different environments and deployments.
+
+
+#### Self-Signed TLS Certificate
+
+You can use cert-manager to provision self-signed certificates for your Kubernetes cluster. You can import the CA of the self-signed certificates into your web browser by exporting it from Kubernetes and saving it into a file. You can then import this CA certificate through your browser's security settings.
+
+#### Image Pull Secrets
+
+An image pull secret is a Kubernetes object that contains the necessary credentials to authenticate with a container registry and pull container images. It is used to securely authenticate and authorize access to private container images stored in a registry. Image pull secrets are typically used when deploying applications that require access to private or restricted container images.
+
+Here is a sample image pull secret manifest file that was generated using the sample command in step 5 of the sample application deployment guide.
 
 ```yaml
 apiVersion: v1
 data:
-  .dockerconfigjson: ${IMAGE_PULL_SECRET}
+  .dockerconfigjson: eyJhdXRocyI6eyJodHRwczovL2luZGV4LmRvY2tlci5pby92MS8iOnsidXNlcm5hbWUiOiJteURvY2tlclVzZXJuYW1lIiwicGFzc3dvcmQiOiJteURvY2tlckFjY2Vzc1Rva2VuIiwiYXV0aCI6ImJYbEViMk5yWlhKVmMyVnlibUZ0WlRwdGVVUnZZMnRsY2tGalkyVnpjMVJ2YTJWdSJ9fX0=
 kind: Secret
 metadata:
   creationTimestamp: null
@@ -148,9 +147,6 @@ metadata:
 type: kubernetes.io/dockerconfigjson
 ```
 
-The environment variable placeholder in the image pull secret YAML file
-should match the environment variable containing the `.dockerconfigjson`
-data.
 
 ## Contributing
 

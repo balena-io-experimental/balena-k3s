@@ -7,10 +7,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - caddy.${TLD}
+    - caddy.balena.local
     secretName: selfsigned-cert
   rules:
-  - host: caddy.${TLD}
+  - host: caddy.balena.local
     http:
       paths:
       - path: "/"

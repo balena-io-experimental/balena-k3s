@@ -37,7 +37,6 @@ services:
     network_mode: host
     environment:
       KUBECONFIG: "/shared/kubeconfig.yaml"
-      TLD: bob.local
     volumes:
       - shared:/shared:ro
     depends_on:
