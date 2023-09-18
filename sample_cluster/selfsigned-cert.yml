@@ -12,9 +12,9 @@ spec:
   usages:
     - server auth
     - client auth
-  commonName: 'caddy.${TLD}'
+  commonName: 'caddy.balena.local'
   dnsNames:
-    - 'caddy.${TLD}'
+    - 'caddy.balena.local'
   subject:
     organizations:
     - balena

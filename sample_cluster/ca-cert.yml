@@ -10,7 +10,7 @@ spec:
   issuerRef:
     name: selfsigned-issuer # Reference to the selfsigned-issuer
     kind: ClusterIssuer
-  commonName: ca.${TLD} # Name of the CA
+  commonName: ca.balena.local # Name of the CA
   subject:
     organizations:
     - balena
