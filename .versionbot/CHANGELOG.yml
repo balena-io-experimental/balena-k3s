@@ -1,4 +1,21 @@
 - commits:
+    - subject: Simplifies the sample application deployment guide.
+      hash: 917ca5f486ccd79bbf91c41e1b87d2145ddbbf18
+      body: |
+        This allows users to try how to deploy kubernetes resources
+        into a newly provisioned cluster and access the application
+        using TLS.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Carlo Miguel F. Cruz <carloc@balena.io>
+        signed-off-by: Carlo Miguel F. Cruz <carloc@balena.io>
+      author: Carlo Miguel F. Cruz
+      nested: []
+  version: 0.2.6
+  title: ""
+  date: 2023-09-18T16:00:03.729Z
+- commits:
     - subject: Improve kubeconfig copy steps
       hash: 219c68047079f16709ad1d831445e9046c2c5549
       body: ""
