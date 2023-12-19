@@ -1,5 +1,4 @@
 name: Flowzone
-
 on:
   pull_request:
     types: [opened, synchronize, closed]
@@ -8,7 +7,6 @@ on:
   pull_request_target:
     types: [opened, synchronize, closed]
     branches: [main, master]
-
 jobs:
   flowzone:
     name: Flowzone
@@ -22,10 +20,6 @@ jobs:
         github.event.pull_request.head.repo.full_name != github.repository &&
         github.event_name == 'pull_request_target'
       )
-
     # Workflows in the same org or enterprise can use the inherit keyword to implicitly pass secrets
     secrets: inherit
-    with:
-      repo_config: true
-      repo_default_branch: main
-      repo_description: "Run a Kubernetes cluster on balenaCloud via k3s!"
+    with: {}
