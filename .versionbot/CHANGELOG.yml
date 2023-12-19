@@ -1,4 +1,21 @@
 - commits:
+    - subject: Remove repo config from flowzone.yml
+      hash: 68863469dd54061c71a70a4de8205ec63453f94b
+      body: |
+        This functionality is being deprecated in Flowzone.
+
+        See: https://github.com/product-os/flowzone/pull/833
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 0.2.7
+  title: ""
+  date: 2023-12-19T21:48:43.121Z
+- commits:
     - subject: Simplifies the sample application deployment guide.
       hash: 917ca5f486ccd79bbf91c41e1b87d2145ddbbf18
       body: |
