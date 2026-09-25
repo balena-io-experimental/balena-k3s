@@ -18,6 +18,18 @@ services:
       - /var/run
     volumes:
       - k3s-data:/var/lib/rancher/k3s
+      # Node password; the server rejects a node that re-registers without it.
+      # https://docs.k3s.io/architecture#node-password-secrets
+      - k3s-node:/etc/rancher/node
+      # The rancher/k3s image declares these as VOLUMEs. Name them, or every
+      # recreated container leaves anonymous volumes behind.
+      - k3s-kubelet:/var/lib/kubelet
+      - k3s-cni:/var/lib/cni
+      - k3s-log:/var/log
 
 volumes:
   k3s-data: {}
+  k3s-node: {}
+  k3s-kubelet: {}
+  k3s-cni: {}
+  k3s-log: {}
