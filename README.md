@@ -28,6 +28,7 @@ balena push <fleet>
 | `K3S_TOKEN` | fleet | A long random secret, e.g. `openssl rand -hex 32` |
 | `K3S_URL` | fleet | `https://<server-ip>:6443` |
 | `K3S_ROLE` | the server device only | `server` |
+| `K3S_NODE_NAME` | device | Optional node name. The default is the hostname |
 | `EXTRA_K3S_ARGS` | fleet or device | Optional extra `k3s` args |
 
 1. Set `K3S_TOKEN` on the fleet.
@@ -38,6 +39,12 @@ balena push <fleet>
 4. Add more devices. They start as agents and join the server.
 
 `K3S_TOKEN` lets any host that knows it join the cluster. Keep it secret.
+
+Set `K3S_NODE_NAME` before a node runs workloads. After a rename, the node
+joins as a new node:
+
+- The old node stays `NotReady`. Delete it with `kubectl delete node <old-name>`.
+- A local-path volume stays bound to the old node, so its pods cannot start.
 
 ## Ports
 
