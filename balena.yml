@@ -1,3 +1,10 @@
 name: balena-k3s
 type: sw.application
+description: Run a Kubernetes cluster on a balenaCloud fleet with k3s
+data:
+  defaultDeviceType: genericx86-64-ext
+  supportedDeviceTypes:
+    - genericx86-64-ext
+    - generic-aarch64
+    - raspberrypi4-64
 version: 0.2.7
