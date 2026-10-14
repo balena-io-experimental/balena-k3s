@@ -7,4 +7,4 @@ data:
     - genericx86-64-ext
     - generic-aarch64
     - raspberrypi4-64
-version: 0.2.7
+version: 1.0.0

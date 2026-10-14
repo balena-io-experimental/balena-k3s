@@ -1,4 +1,61 @@
 - commits:
+    - subject: Document K3S_NODE_NAME for naming nodes
+      hash: f97c4a1c9bafe788ed8b1655e6a28557343b3342
+      body: |
+        k3s reads K3S_NODE_NAME as --node-name, so a device variable names a
+        node without changing the device hostname. Note what a rename leaves
+        behind: a stale NotReady node, and local-path volumes pinned to it.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: Persist k3s node identity and name the image's volumes
+      hash: 13f0ed555afd43a0136ac6b8712066d64ffcaf57
+      body: |
+        k3s agents store a node password in /etc/rancher/node, and the server
+        rejects any re-registration under the same node name with a different
+        password. That directory was not in a volume, so every new release
+        recreated the container with a fresh password and locked the node out.
+
+        The rancher/k3s image also declares VOLUME for /var/lib/kubelet,
+        /var/lib/cni and /var/log. Without named mounts, every recreated
+        container gets fresh anonymous volumes and leaves the old ones behind.
+        A test server had 40 of them after two hours of releases. Named volumes
+        also keep the CNI IP allocations and kubelet state in step with the
+        containerd state that k3s-data already persists.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: Rework as a single-server, multi-node k3s cluster
+      hash: 23926cbc6b4c41f4261933cd82b6295eb62341c7
+      body: |
+        Drop embedded-etcd HA, the bastion service, and the sample cluster.
+        Every device runs one k3s image; K3S_ROLE=server marks the server and
+        all other devices join as agents. K3S_TOKEN is now required.
+
+        balenaOS runs cgroup v1, which Kubernetes 1.35+ kubelets refuse by
+        default, so the entrypoint passes --kubelet-arg=fail-cgroupv1=false.
+
+        Existing fleets must purge the k3s data volume: k3s cannot migrate
+        from embedded etcd to sqlite.
+      footer:
+        Change-type: major
+        change-type: major
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 1.0.0
+  title: ""
+  date: 2026-10-14T12:40:29.086Z
+- commits:
     - subject: Remove repo config from flowzone.yml
       hash: 68863469dd54061c71a70a4de8205ec63453f94b
       body: |
