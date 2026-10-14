@@ -1,4 +1,2 @@
-ca.crt
 k3s.yaml
 kubeconfig.yaml
-sample_cluster/image-pull-secret.yml

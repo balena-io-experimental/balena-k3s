@@ -22,4 +22,3 @@ jobs:
       )
     # Workflows in the same org or enterprise can use the inherit keyword to implicitly pass secrets
     secrets: inherit
-    with: {}
